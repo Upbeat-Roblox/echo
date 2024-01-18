@@ -1,0 +1,10 @@
+/*.rbxlx.lock
+/*.rbxl.lock
+/*.rbxl
+/*.rbxlx
+/*.rbxm
+/*.rbxmx
+Packages/*
+.VSCodeCounter
+sourcemap.json
+wally.lock
