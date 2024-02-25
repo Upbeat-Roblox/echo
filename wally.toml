@@ -1,0 +1,12 @@
+[package]
+name = "monke-mob/echo"
+description = "A Roblox audio system."
+version = "0.1.0"
+registry = "https://github.com/UpliftGames/wally-index"
+authors = ["Lanred"]
+realm = "shared"
+license = "MIT"
+include = ["default.project.json", "src", "src/**", "LICENSE", "wally.toml"]
+exclude = ["**"]
+
+[dependencies]
