@@ -19,6 +19,8 @@ local client = baseEnvironment
 function client:start()
     self:baseStart()
 
+    playEvent:FireServer()
+
     playEvent.OnClientEvent:Connect(function(...)
         self:play(...)
     end)
