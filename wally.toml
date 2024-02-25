@@ -1,5 +1,5 @@
 [package]
-name = "monke-mob/echo"
+name = "lanred-dev/echo"
 description = "A Roblox audio system."
 version = "0.1.0"
 registry = "https://github.com/UpliftGames/wally-index"
