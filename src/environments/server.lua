@@ -1,7 +1,7 @@
 local baseEnvironment = require(script.Parent.base)
 local createAudio = require(script.Parent.Parent.functions.createAudio)
-local getPlayParameters = require(script.Parent.Parent.functions.getPlayParameters)
 local generateAudioID = require(script.Parent.Parent.functions.generateAudioID)
+local getPlayParameters = require(script.Parent.Parent.functions.getPlayParameters)
 local playEvent: RemoteEvent = script.Parent.Parent.events.play
 local stopEvent: RemoteEvent = script.Parent.Parent.events.stop
 
@@ -9,6 +9,7 @@ type audio = baseEnvironment.audio & {
     instance: Sound?,
     replicate: boolean,
     replicateData: {
+        startTime: number,
         audioID: number,
         parent: Instance?,
         position: number?,
@@ -36,7 +37,14 @@ function server:start()
                 continue
             end
 
-            playEvent:FireClient(player, audio.replicateData.audioID, audio.replicateData.parent, audio.group, id, audio.replicateData.position)
+            playEvent:FireClient(
+                player,
+                audio.replicateData.audioID,
+                audio.replicateData.parent,
+                audio.group,
+                id,
+                audio.replicateData.startTime - os.clock() + (audio.replicateData.position or 0)
+            )
         end
     end)
 end
@@ -52,7 +60,14 @@ end
     @param {number?} position [The starting position of the audio.]
     @returns string
 ]]
-function server:play(audioID: number, parent: Instance?, group: string?, persistent: boolean?, id: string?, position: number?): string
+function server:play(
+    audioID: number,
+    parent: Instance?,
+    group: string?,
+    persistent: boolean?,
+    id: string?,
+    position: number?
+): string
     if typeof(id) ~= "string" then
         id = generateAudioID(audioID)
     end
@@ -63,10 +78,11 @@ function server:play(audioID: number, parent: Instance?, group: string?, persist
             group = group,
             replicate = true,
             replicateData = {
+                startTime = os.clock(),
                 audioID = audioID,
                 parent = parent,
                 position = position,
-            }
+            },
         }
     end
 
