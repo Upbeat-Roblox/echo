@@ -46,6 +46,7 @@ function client:play(audioID: number, parent: Instance?, group: string?, id: str
     local audioInstance: Sound =
         createAudio(audioID, parent :: Instance, group :: string, id :: string, position :: number)
     audioInstance.Volume = self:getVolume(group)
+    audioInstance:Play()
 
     audioInstance.Ended:Once(function()
         self:stop(id)
