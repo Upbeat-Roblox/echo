@@ -10,7 +10,7 @@ type audio = baseEnvironment.audio & {
     replicate: boolean,
     replicateData: {
         startTime: number,
-        audioID: number,
+        audioID: string,
         parent: Instance?,
         position: number?,
     }?,
@@ -52,7 +52,7 @@ end
 --[[
     Plays a audio on the clients.
 
-    @param {number} audioID [The ID of the audio.]
+    @param {string} audioID [The ID of the audio.]
     @param {Instance?} parent [The parent to be used for the audio instance.]
     @param {string?} group [The ID of the audio group.]
     @param {boolean?} persistent [Stores the audio in a group. WARNING: The audio will not be cleaned up automatically.]
@@ -61,7 +61,7 @@ end
     @returns string
 ]]
 function server:play(
-    audioID: number,
+    audioID: string,
     parent: Instance?,
     group: string?,
     persistent: boolean?,
@@ -93,14 +93,14 @@ end
 --[[
     Plays a audio on the server.
 
-    @param {number} audioID [The ID of the audio.]
+    @param {string} audioID [The ID of the audio.]
     @param {Instance?} parent [The parent to be used for the audio instance.]
     @param {string?} group [The ID of the audio group.]
     @param {string?} id [The ID for accessing the audio through Echo.]
     @param {number?} position [The starting position of the audio.]
     @returns Sound
 ]]
-function server:playOnServer(audioID: number, parent: Instance?, group: string?, id: string?, position: number?): Sound
+function server:playOnServer(audioID: string, parent: Instance?, group: string?, id: string?, position: number?): Sound
     parent, group, id, position = getPlayParameters(audioID, parent, group, id, position)
 
     local audioInstance: Sound =

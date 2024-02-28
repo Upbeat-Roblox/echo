@@ -33,14 +33,14 @@ end
 --[[
     Plays a audio.
 
-    @param {number} audioID [The ID of the audio.]
+    @param {string} audioID [The ID of the audio.]
     @param {Instance?} parent [The parent to be used for the audio instance.]
     @param {string?} group [The ID of the audio group.]
     @param {string?} id [The ID for accessing the audio through Echo.]
     @param {number?} position [The starting position of the audio.]
     @returns Sound
 ]]
-function client:play(audioID: number, parent: Instance?, group: string?, id: string?, position: number?)
+function client:play(audioID: string, parent: Instance?, group: string?, id: string?, position: number?)
     parent, group, id, position = getPlayParameters(audioID, parent, group, id, position)
 
     local audioInstance: Sound =

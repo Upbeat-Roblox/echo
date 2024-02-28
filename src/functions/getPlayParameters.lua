@@ -6,7 +6,7 @@ local generateAudioID = require(script.Parent.generateAudioID)
 --[[
     Assigns defaults values to parameters if no value is provided.
 
-    @param {number} audioID [The ID of the audio.]
+    @param {string} audioID [The ID of the audio.]
     @param {Instance?} parent [The parent to be used for the audio instance.]
     @param {string?} group [The ID of the audio group.]
     @param {string?} id [The ID for accessing the audio through Echo.]
@@ -14,7 +14,7 @@ local generateAudioID = require(script.Parent.generateAudioID)
     @returns Instance, string, string, number
 --]]
 local function getPlayParameters(
-    audioID: number,
+    audioID: string,
     parent: Instance?,
     group: string?,
     id: string?,
