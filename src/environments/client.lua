@@ -1,6 +1,5 @@
 local baseEnvironment = require(script.Parent.base)
-local createAudio = require(script.Parent.Parent.functions.createAudio)
-local getPlayParameters = require(script.Parent.Parent.functions.getPlayParameters)
+local types = require(script.Parent.Parent.types)
 local playEvent: RemoteEvent = script.Parent.Parent.events.play
 local stopEvent: RemoteEvent = script.Parent.Parent.events.stop
 
@@ -9,20 +8,26 @@ local stopEvent: RemoteEvent = script.Parent.Parent.events.stop
 
     @public
 ]]
-local client = baseEnvironment
+local controller = baseEnvironment
+
+export type controller = baseEnvironment.controller & {
+    start: () -> never,
+    play: (properties: types.properties, id: string?, group: string?) -> Sound,
+}
 
 --[[
     Starts the client environment.
 
     @returns never
 ]]
-function client:start()
-    self:baseStart()
+function controller:start()
+    self:_start()
 
+    -- Request the persistent audios that are already being played.
     playEvent:FireServer()
 
     playEvent.OnClientEvent:Connect(function(...)
-        self:play(...)
+        self:_play(...)
     end)
 
     stopEvent.OnClientEvent:Connect(function(...)
@@ -31,50 +36,8 @@ function client:start()
 end
 
 --[[
-    Plays a audio.
-
-    @param {string} audioID [The ID of the audio.]
-    @param {Instance?} parent [The parent to be used for the audio instance.]
-    @param {string?} group [The ID of the audio group.]
-    @param {string?} id [The ID for accessing the audio through Echo.]
-    @param {number?} position [The starting position of the audio.]
-    @returns Sound
+    @extends baseEnvironment._play
 ]]
-function client:play(audioID: string, parent: Instance?, group: string?, id: string?, position: number?)
-    parent, group, id, position = getPlayParameters(audioID, parent, group, id, position)
+controller.play = controller._play
 
-    local audioInstance: Sound =
-        createAudio(audioID, parent :: Instance, group :: string, id :: string, position :: number)
-    audioInstance.Volume = self:getVolume(group)
-    audioInstance:Play()
-
-    audioInstance.Ended:Once(function()
-        self:stop(id)
-    end)
-
-    self._audios[id] = {
-        instance = audioInstance,
-        group = group,
-    }
-
-    return audioInstance
-end
-
---[[
-    Stops and removes a audio.
-
-    @param {string} id [The ID for accessing the audio through Echo.]
-    @returns never
-]]
-function client:stop(id: string)
-    local audio: baseEnvironment.audio? = self._audios[id]
-
-    if audio == nil then
-        return
-    end
-
-    audio.instance:Destroy()
-    self._audios[id] = nil
-end
-
-return client
+return (controller :: any) :: controller
