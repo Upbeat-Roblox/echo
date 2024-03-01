@@ -36,6 +36,11 @@ function controller:stop(id: string)
     local audio: types.audio? = self._audios[id]
 
     if audio == nil then
+        -- The audio was not persistent and it was only replicated so tell the clients.
+        if string.match(id, "replicatedNotPersistent-") then
+            stopEvent:FireAllClients(id)
+        end
+
         return
     elseif audio.instance then
         audio.instance:Destroy()
@@ -61,7 +66,7 @@ function controller:setVolume(volume: number, group: string?)
     self._groups[group] = volume
 
     for _id: string, audio: types.audio in pairs(self._audios) do
-        if audio.group ~= group then
+        if audio.group ~= group or audio.instance == nil then
             continue
         end
 
