@@ -12,12 +12,4 @@
 
 local RunService = game:GetService("RunService")
 
-local environment: ModuleScript
-
-if RunService:IsClient() then
-    environment = script.environments.client
-else
-    environment = script.environments.server
-end
-
-return require(environment)
+return require(if RunService:IsClient() then script.environments.client else script.environments.server)
