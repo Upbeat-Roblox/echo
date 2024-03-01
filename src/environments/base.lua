@@ -29,7 +29,7 @@ export type controller = {
 --[[
     Stops and destroys an audio.
 
-    @param {string?} id [The ID for accessing the audio through Echo.]
+    @param {string} id [The ID for accessing the audio through Echo.]
     @returns never
 ]]
 function controller:stop(id: string)
