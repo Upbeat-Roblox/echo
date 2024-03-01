@@ -1,5 +1,5 @@
 export type audio = {
-    instance: Sound,
+    instance: Sound?,
     group: string,
     replicates: boolean,
     metadata: { [string]: property }?,
