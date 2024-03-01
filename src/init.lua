@@ -12,4 +12,8 @@
 
 local RunService = game:GetService("RunService")
 
-return require(if RunService:IsClient() then script.environments.client else script.environments.server)
+if RunService:IsClient() then
+    return require(script.environments.client)
+else
+    return require(script.environments.server)
+end
