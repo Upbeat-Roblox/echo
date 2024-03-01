@@ -10,7 +10,7 @@ local stopEvent: RemoteEvent = script.Parent.Parent.events.stop
 --[[
     Controls the base environment.
 
-    @public
+    @private
 ]]
 local controller = {}
 controller._groups = {}
