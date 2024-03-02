@@ -33,7 +33,7 @@ export type controller = {
     restart: () -> never,
     getCurrentAudioMetadata: () -> types.metadata,
     skipTo: (id: number | string) -> never,
-    _start: () -> never,
+    _baseStart: () -> never,
     _playIndex: (index: number) -> never,
     _findIndexByID: (id: string) -> number?,
 }
@@ -252,7 +252,7 @@ end
     @private
     @returns never
 ]]
-function controller:_start()
+function controller:_baseStart()
     self:setQueue("default")
     environmentController:setVolume("queue", 1)
 end
