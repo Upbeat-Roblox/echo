@@ -1,6 +1,6 @@
 local RunService = game:GetService("RunService")
 
-local BLACKLISTED_QUEUE_IDS: {string} = {"default"}
+local BLACKLISTED_QUEUE_IDS: { string } = { "default" }
 
 local environmentController =
     require(if RunService:IsClient() then script.Parent.Parent.client else script.Parent.Parent.server)
@@ -24,13 +24,18 @@ export type controller = {
     createQueue: (queue: string) -> never,
     destroyQueue: (queue: string) -> never,
     setQueue: (queue: string) -> never,
+    addToQueue: (queue: string, id: string, properties: types.properties, metadata: types.metadata?) -> number,
+    add: (id: string, properties: types.properties, metadata: types.metadata?) -> number,
+    removeFromQueue: (queue: string, id: number | string) -> never,
+    remove: (id: number | string) -> never,
     next: () -> never,
     back: () -> never,
     restart: () -> never,
     getCurrentAudioMetadata: () -> types.metadata,
-    skipTo: (index: number) -> never,
+    skipTo: (id: number | string) -> never,
     _start: () -> never,
     _playIndex: (index: number) -> never,
+    _findIndexByID: (id: string) -> number?,
 }
 
 --[[
@@ -100,6 +105,79 @@ function controller:setQueue(queue: string)
 end
 
 --[[
+    Adds a song to the queue.
+
+    @param {string} queue [The ID of the queue.]
+    @param {string} id [The ID for accessing the audio through Echo.]
+    @param {types.properties} properties [The audio properties.]
+    @param {types.metadata?} metadata [The audio metadata.]
+    @returns number
+]]
+function controller:addToQueue(
+    queue: string,
+    id: string,
+    properties: types.properties,
+    metadata: types.metadata?
+): number
+    if self._queues[queue] == nil then
+        warn("queueDoesNotExist", queue)
+        return 0
+    end
+
+    table.insert(self._queues[queue], {
+        id = id,
+        properties = properties,
+        metadata = metadata,
+    })
+
+    return #self._queues[queue]
+end
+
+--[[
+    Adds a song to the default queue.
+
+    @param {string} id [The ID for accessing the audio through Echo.]
+    @param {types.properties} properties [The audio properties.]
+    @param {types.metadata?} metadata [The audio metadata.]
+    @returns number
+]]
+function controller:add(...): number
+    return self:addToQueue("default", ...)
+end
+
+--[[
+    Removes a song from the queue.
+
+    @param {string} queue [The ID of the queue.]
+    @param {number | string} id [The index or ID of the audio.]
+    @returns never
+]]
+function controller:removeFromQueue(queue: string, id: number | string)
+    local index: number? = if typeof(id) == "string" then self:_findIndexByID(id) else id
+
+    if typeof(index) ~= "number" then
+        warn("audioIDDoesNotExist", id)
+        return
+    end
+
+    if self._currentQueue == queue and self._currentIndexInQueue == index then
+        self:next()
+    end
+
+    table.remove(self._queues[self._currentQueue], index)
+end
+
+--[[
+    Removes a song to the default queue.
+
+    @param {number | string} id [The index or ID of the audio.]
+    @returns never
+]]
+function controller:remove(...)
+    return self:removeFromQueue("default", ...)
+end
+
+--[[
     Plays the next song in the queue.
 
     @returns never
@@ -146,10 +224,17 @@ end
 --[[
     Skips to a song in queue.
 
-    @param {number} index [The index of the audio in the queue.]
+    @param {number | string} id [The index or ID of the audio.]
     @returns never
 ]]
-function controller:skipTo(index: number)
+function controller:skipTo(id: number | string)
+    local index: number? = if typeof(id) == "string" then self:_findIndexByID(id) else id
+
+    if typeof(index) ~= "number" then
+        warn("audioIDDoesNotExist", id)
+        return
+    end
+
     if index > #self._queues[self._currentQueue] then
         self._currentIndexInQueue = #self._queues[self._currentQueue]
     end
@@ -189,6 +274,27 @@ function controller:_playIndex(index: number)
     end
 
     environmentController:play(audio.properties, audio.id, "queue")
+end
+
+--[[
+    Returns the index of a audio via the id.
+
+    @private
+    @param {string} id [The ID for accessing the audio through Echo.]
+    @returns number?
+]]
+function controller:_findIndexByID(id: string): number?
+    local audioIndex: number
+
+    for index: number, audio: types.queueAudio in ipairs(self._queues[self._currentQueue]) do
+        if audio.id ~= id then
+            continue
+        end
+
+        audioIndex = index
+    end
+
+    return if typeof(audioIndex) == "number" then audioIndex else nil
 end
 
 return (controller :: any) :: controller
