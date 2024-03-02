@@ -1,6 +1,6 @@
 local RunService = game:GetService("RunService")
 
-local BLACKLISTED_QUEUE_IDS: { string } = { "default" }
+local BLACKLISTED_QUEUE_IDS: { string } = { "default", "replicatedQueue" }
 
 local environmentController =
     require(if RunService:IsClient() then script.Parent.Parent.client else script.Parent.Parent.server)
