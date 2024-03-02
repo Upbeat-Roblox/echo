@@ -19,11 +19,11 @@ controller._audios = {}
 export type controller = {
     _groups: { [string]: number },
     _audios: { [string]: types.audio },
-    setVolume: (volume: number, group: string?) -> never,
-    getVolume: (group: string?) -> number,
-    _start: () -> never,
-    _play: (properties: types.properties, id: string?, group: string?) -> Sound,
-    _getProperty: (properties: types.properties, property: string, default: types.property) -> types.property,
+    setVolume: (self: controller, volume: number, group: string?) -> never,
+    getVolume: (self: controller, group: string?) -> number,
+    _start: (self: controller) -> never,
+    _play: (self: controller, properties: types.properties, id: string?, group: string?) -> Sound,
+    _getProperty: (self: controller, properties: types.properties, property: string, default: types.property) -> types.property,
 }
 
 --[[
