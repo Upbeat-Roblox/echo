@@ -11,9 +11,9 @@ local playEvent: RemoteEvent = script.Parent.Parent.events.play
 local controller = baseEnvironment
 
 export type controller = baseEnvironment.controller & {
-    start: () -> never,
-    play: (properties: types.properties, id: string?, group: string?) -> string,
-    playOnServer: (properties: types.properties, id: string?, group: string?) -> Sound,
+    start: (self: controller) -> never,
+    play: (self: controller, properties: types.properties, id: string?, group: string?) -> string,
+    playOnServer: (self: controller, properties: types.properties, id: string?, group: string?) -> Sound,
 }
 
 --[[
