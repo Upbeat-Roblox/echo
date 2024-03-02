@@ -9,12 +9,12 @@ export type properties = {
 export type metadata = {[string]: property}
 
 export type basicAudio = {
-    group: string,
     properties: properties?,
     metadata: metadata?,
 }
 
 export type audio = basicAudio & {
+    group: string,
     instance: Sound?,
     replicates: boolean,
 }
