@@ -26,16 +26,16 @@ function controller:start()
 
     playEvent.OnServerEvent:Connect(function(player: Player)
         for id: string, audio: types.audio in pairs(self._audios) do
-            if audio.replicates ~= true or audio.metadata == nil then
+            if audio.replicates ~= true or audio.properties == nil then
                 continue
             end
 
             -- Update the position so that the client is at the same position as all the others.
-            local position: number = self:_getProperty(audio.metadata, "Position", 0)
+            local position: number = self:_getProperty(audio.properties, "Position", 0)
             local startTime: number = self:_getProperty(audio.metadata, "startTime", os.clock())
-            audio.metadata["Position"] = startTime - os.clock() + position
+            audio.properties["Position"] = startTime - os.clock() + position
 
-            playEvent:FireClient(player, audio.metadata, id, audio.group)
+            playEvent:FireClient(player, audio.properties, id, audio.group)
         end
     end)
 end
@@ -56,12 +56,14 @@ function controller:play(properties: types.properties, id: string?, group: strin
     local persistent: boolean = self:_getProperty(properties, "persistent", false)
 
     if persistent then
-        properties["startTime"] = os.clock()
         self._audios[id] = {
             instance = nil,
             group = group,
             replicates = true,
-            metadata = properties,
+            properties = properties,
+            metadata = {
+                startTime = os.clock(),
+            },
         }
     else
         id = `replicatedNotPersistent-{id}`
