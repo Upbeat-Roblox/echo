@@ -8,6 +8,14 @@
         {
             "Name": "stop",
             "ClassName": "RemoteEvent"
+        },
+        {
+            "Name": "queueAdd",
+            "ClassName": "RemoteEvent"
+        },
+        {
+            "Name": "queueRemove",
+            "ClassName": "RemoteEvent"
         }
     ]
 }
