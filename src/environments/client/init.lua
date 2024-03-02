@@ -1,4 +1,5 @@
 local baseEnvironment = require(script.Parent.base)
+local queue = require(script.queue)
 local types = require(script.Parent.Parent.types)
 local playEvent: RemoteEvent = script.Parent.Parent.events.play
 local stopEvent: RemoteEvent = script.Parent.Parent.events.stop
@@ -9,6 +10,7 @@ local stopEvent: RemoteEvent = script.Parent.Parent.events.stop
     @public
 ]]
 local controller = baseEnvironment
+controller.queue = queue
 
 export type controller = baseEnvironment.controller & {
     start: () -> never,
@@ -22,6 +24,7 @@ export type controller = baseEnvironment.controller & {
 ]]
 function controller:start()
     self:_start()
+    self.queue:_start()
 
     -- Request the persistent audios that are already being played.
     playEvent:FireServer()
