@@ -103,8 +103,15 @@ function controller:setQueue(queue: string)
         return
     end
 
+    local queueWasPlaying: boolean = self._queues[self._currentQueue].playing
+    self:stop()
+
     self._currentQueue = queue
     self:restart()
+
+    if queueWasPlaying then
+        self:play()
+    end
 end
 
 --[[
