@@ -260,10 +260,20 @@ end
 --[[
     Returns the audio queue.
 
+    @param {string?} queue [The ID of the queue.]
     @returns { types.queueAudio }
 ]]
-function controller:getQueue(): { types.queueAudio }
-    return self._queues[self._currentQueue].audios
+function controller:getQueue(queue: string?): { types.queueAudio }
+    if typeof(queue) == "string" then
+        if self._queues[queue] == nil then
+            warn("queueDoesNotExist", queue)
+            return {}
+        end
+
+        return self._queues[queue].audios
+    else
+        return self._queues[self._currentQueue].audios
+    end
 end
 
 --[[
