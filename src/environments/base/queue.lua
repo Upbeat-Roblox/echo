@@ -193,6 +193,31 @@ function controller:remove(...)
 end
 
 --[[
+    Resets and stops a queue.
+
+    @param {string} queue [The ID of the queue.]
+    @returns never
+]]
+function controller:resetQueue(queue: string)
+    if self._queues[queue] == nil then
+        warn("queueDoesNotExist", queue)
+        return
+    end
+
+    self._queues[queue].audios = {}
+end
+
+--[[
+    Resets and stops the current queue.
+
+    @returns never
+]]
+function controller:reset()
+    self:stop()
+    self:resetQueue(self._currentQueue)
+end
+
+--[[
     Plays the current queue.
 
     @returns never
