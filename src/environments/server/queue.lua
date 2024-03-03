@@ -43,7 +43,7 @@ function controller:_start()
             return
         end
 
-        queueAddEvent:FireAllClients(index)
+        queueRemoveEvent:FireAllClients(index)
     end)
 end
 
