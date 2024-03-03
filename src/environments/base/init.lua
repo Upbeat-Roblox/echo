@@ -43,7 +43,8 @@ function controller:stop(id: string)
     local audio: types.audio? = self._audios[id]
 
     if audio == nil then
-        -- The audio was not persistent and it was only replicated so tell the clients.
+        -- If the audio was not persistent then it was only replicated so tell the clients.
+        -- NOTE: There is no way of knowing if the audio is still playing so this could fire even if the audio has already stopped.
         if string.match(id, "replicatedNotPersistent-") then
             stopEvent:FireAllClients(id)
         end
