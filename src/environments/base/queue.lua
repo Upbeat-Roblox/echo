@@ -411,7 +411,7 @@ function controller:_playIndex(index: number)
 end
 
 --[[
-    Returns the index of a audio via the id.
+    Returns the index of a audio via the ID.
 
     @private
     @param {string} id [The ID for accessing the audio through Echo.]
