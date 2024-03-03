@@ -46,7 +46,7 @@ export type controller = {
     removeFromQueue: (self: controller, queue: string, id: number | string) -> never,
     remove: (self: controller, id: number | string) -> never,
     isPlaying: (self: controller) -> boolean,
-    getQueue: (self: controller) -> { types.queueAudio },
+    getQueue: (self: controller, queue: string?) -> { types.queueAudio },
     play: (self: controller) -> never,
     pause: (self: controller) -> never,
     next: (self: controller) -> never,
