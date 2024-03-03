@@ -20,6 +20,7 @@ controller._audios = {}
 export type controller = {
     _groups: { [string]: number },
     _audios: { [string]: types.audio },
+    stop: (self: controller, id: string) -> never,
     setVolume: (self: controller, volume: number, group: string?) -> never,
     getVolume: (self: controller, group: string?) -> number,
     _start: (self: controller) -> never,
