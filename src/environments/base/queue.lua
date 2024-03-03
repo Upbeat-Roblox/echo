@@ -61,9 +61,6 @@ function controller:createQueue(queue: string)
         playing = false,
         audios = {},
     }
-
-    self._currentQueue = queue
-    self:restart()
 end
 
 --[[
