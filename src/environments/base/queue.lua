@@ -122,7 +122,7 @@ function controller:setQueue(queue: string)
     end
 
     local queueWasPlaying: boolean = self._queues[self._currentQueue].playing
-    self:stop()
+    self:pause()
 
     self._currentQueue = queue
     self:restart()
@@ -231,7 +231,7 @@ end
     @returns never
 ]]
 function controller:reset()
-    self:stop()
+    self:pause()
     self:resetQueue(self._currentQueue)
 end
 
