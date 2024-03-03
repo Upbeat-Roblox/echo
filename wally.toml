@@ -6,7 +6,7 @@ registry = "https://github.com/UpliftGames/wally-index"
 authors = ["Lanred"]
 realm = "shared"
 license = "MIT"
-include = ["default.project.json", "src", "src/**", "LICENSE", "wally.toml"]
+include = ["default.project.json", "src", "src/**", "LICENSE", "wally.toml", "Packages", "Packages/**"]
 exclude = ["**"]
 
 [dependencies]
