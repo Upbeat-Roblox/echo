@@ -1,6 +1,7 @@
 local baseEnvironment = require(script.Parent.base)
 local queue = require(script.queue)
 local types = require(script.Parent.Parent.types)
+local warn = require(script.Parent.Parent.functions.warn)
 local playEvent: RemoteEvent = script.Parent.Parent.events.play
 local stopEvent: RemoteEvent = script.Parent.Parent.events.stop
 
@@ -11,9 +12,11 @@ local stopEvent: RemoteEvent = script.Parent.Parent.events.stop
 ]]
 local controller = baseEnvironment
 controller.queue = queue
+controller._started = false
 
 export type controller = baseEnvironment.controller & {
     queue: queue.controller,
+    _started: boolean,
     start: (self: controller) -> never,
     play: (self: controller, properties: types.properties, id: string?, group: string?) -> Sound,
 }
@@ -24,6 +27,12 @@ export type controller = baseEnvironment.controller & {
     @returns never
 ]]
 function controller:start()
+    if self._started then
+        warn("alreadyStarted")
+        return
+    end
+
+    self._started = true
     self:_start()
     self.queue:_start()
 
