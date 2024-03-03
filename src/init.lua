@@ -12,10 +12,22 @@
 
 local RunService = game:GetService("RunService")
 
-if RunService:IsClient() then
+if RunService:IsServer() then
+    local client: ModuleScript = script.environments:FindFirstChild("client")
+
+    if RunService:IsRunning() and client then
+        client:Destroy()
+    end
+
+    local server = require(script.environments.server)
+    return server :: server.controller
+else
+    local server: ModuleScript = script.environments:FindFirstChild("server")
+
+    if RunService:IsRunning() and server then
+        server:Destroy()
+    end
+
     local client = require(script.environments.client)
     return client :: client.controller
-else
-    local server = require(script.environments.client)
-    return server :: server.controller
 end
