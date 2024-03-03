@@ -186,7 +186,7 @@ function controller:add(...): number
 end
 
 --[[
-    Removes a song from the queue.
+    Removes a song from a queue.
 
     @param {string} queue [The ID of the queue.]
     @param {number | string} id [The index or ID of the audio.]
