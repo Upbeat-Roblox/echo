@@ -13,6 +13,7 @@ local controller = baseEnvironment
 controller.queue = queue
 
 export type controller = baseEnvironment.controller & {
+    queue: queue.controller,
     start: (self: controller) -> never,
     play: (self: controller, properties: types.properties, id: string?, group: string?) -> string,
     playOnServer: (self: controller, properties: types.properties, id: string?, group: string?) -> Sound,
