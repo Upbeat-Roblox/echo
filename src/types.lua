@@ -6,7 +6,7 @@ export type properties = {
     [string]: property,
 }
 
-export type metadata = {[string]: property}
+export type metadata = { [string]: property }
 
 export type basicAudio = {
     properties: properties?,
@@ -23,6 +23,6 @@ export type queueAudio = basicAudio & {
     id: string,
 }
 
-export type queue = { queueAudio }
+export type queue = { playing: boolean, audios: { queueAudio } }
 
 return nil

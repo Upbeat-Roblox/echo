@@ -55,6 +55,11 @@ function controller:createQueue(queue: string)
         return
     end
 
+    self._queues[queue] = {
+        playing = false,
+        audios = {},
+    }
+
     self._currentQueue = queue
     self:restart()
 end
@@ -124,7 +129,7 @@ function controller:addToQueue(
         return 0
     end
 
-    table.insert(self._queues[queue], {
+    table.insert(self._queues[queue].audios, {
         id = id,
         properties = properties,
         metadata = metadata,
@@ -164,7 +169,7 @@ function controller:removeFromQueue(queue: string, id: number | string)
         self:next()
     end
 
-    table.remove(self._queues[self._currentQueue], index)
+    table.remove(self._queues[self._currentQueue].audios, index)
 end
 
 --[[
@@ -175,6 +180,34 @@ end
 ]]
 function controller:remove(...)
     return self:removeFromQueue("default", ...)
+end
+
+--[[
+    Plays the current queue.
+
+    @returns never
+]]
+function controller:play()
+    if self._queues[self._currentQueue].playing then
+        return
+    end
+
+    self._queues[self._currentQueue].playing = true
+    self:_playIndex(self._currentIndexInQueue)
+end
+
+--[[
+    Pauses the current queue.
+
+    @returns never
+]]
+function controller:pause()
+    if self._queues[self._currentQueue].playing ~= true then
+        return
+    end
+
+    self._queues[self._currentQueue].playing = false
+    environmentController:stop("queue")
 end
 
 --[[
@@ -218,7 +251,7 @@ end
     @returns types.metadata
 ]]
 function controller:getCurrentAudioMetadata(): types.metadata
-    return self._queues[self._currentQueue][self._currentIndexInQueue]
+    return self._queues[self._currentQueue].audios[self._currentIndexInQueue]
 end
 
 --[[
@@ -267,7 +300,13 @@ end
 function controller:_playIndex(index: number)
     self._currentIndexInQueue = index
 
-    local audio: types.queueAudio = self._queues[self._currentQueue][index]
+    local queue: types.queue = self._queues[self._currentQueue]
+
+    if queue.playing ~= true then
+        return
+    end
+
+    local audio: types.queueAudio = queue.audios[index]
 
     if audio == nil then
         return
