@@ -1,4 +1,5 @@
 local baseEnvironment = require(script.Parent.base)
+local queue = require(script.queue)
 local generateAudioID = require(script.Parent.Parent.functions.generateAudioID)
 local types = require(script.Parent.Parent.types)
 local playEvent: RemoteEvent = script.Parent.Parent.events.play
@@ -9,6 +10,7 @@ local playEvent: RemoteEvent = script.Parent.Parent.events.play
     @public
 ]]
 local controller = baseEnvironment
+controller.queue = queue
 
 export type controller = baseEnvironment.controller & {
     start: (self: controller) -> never,
@@ -23,6 +25,7 @@ export type controller = baseEnvironment.controller & {
 ]]
 function controller:start()
     self:_start()
+    self.queue:_start()
 
     playEvent.OnServerEvent:Connect(function(player: Player)
         for id: string, audio: types.audio in pairs(self._audios) do
