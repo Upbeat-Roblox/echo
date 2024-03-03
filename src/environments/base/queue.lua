@@ -1,5 +1,7 @@
 local RunService = game:GetService("RunService")
 
+local Signal = require(script.Parent.Parent.Parent.Packages.Signal)
+
 local BLACKLISTED_QUEUE_IDS: { string } = { "default", "replicatedQueue" }
 
 local environmentController =
@@ -13,11 +15,19 @@ local warn = require(script.Parent.Parent.Parent.functions.warn)
     @public
 ]]
 local controller = {}
+controller.audioAdded = Signal.new()
+controller.audioRemoved = Signal.new()
+controller.audioPlaying = Signal.new()
 controller._currentIndexInQueue = 0
 controller._currentQueue = nil
 controller._queues = {}
 
+type Signal = typeof(Signal.new())
+
 export type controller = {
+    audioAdded: Signal,
+    audioRemoved: Signal,
+    audioPlaying: Signal,
     _currentIndexInQueue: number,
     _currentQueue: string,
     _queues: { [string]: types.queue },
@@ -158,7 +168,9 @@ function controller:addToQueue(
         metadata = metadata,
     })
 
-    return #self._queues[queue]
+    local index: number = #self._queues[queue]
+    self.audioAdded:Fire(self._queues[queue].audios[index], queue)
+    return index
 end
 
 --[[
@@ -197,6 +209,7 @@ function controller:removeFromQueue(queue: string, id: number | string)
         self:next()
     end
 
+    self.audioRemoved:Fire(self._queues[self._currentQueue].audios[index], queue)
     table.remove(self._queues[self._currentQueue].audios, index)
 end
 
@@ -383,6 +396,7 @@ function controller:_playIndex(index: number)
         return
     end
 
+    self.audioPlaying:Fire(audio, self._currentQueue)
     environmentController:play(audio.properties, audio.id, "queue")
 end
 
