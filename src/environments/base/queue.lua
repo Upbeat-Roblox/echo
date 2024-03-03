@@ -162,14 +162,23 @@ function controller:addToQueue(
         return 0
     end
 
-    table.insert(self._queues[queue].audios, {
+    local audio: types.queueAudio = {
         id = id,
         properties = properties,
         metadata = metadata,
-    })
+    }
+
+    table.insert(self._queues[queue].audios, audio)
 
     local index: number = #self._queues[queue]
     self.audioAdded:Fire(self._queues[queue].audios[index], queue)
+
+    -- If the current queue is playing but this is the first song in the queue then
+    -- it must played.
+    if self._currentQueue == queue and self:isPlaying() and index == 0 then
+        self:_playIndex(index)
+    end
+
     return index
 end
 
