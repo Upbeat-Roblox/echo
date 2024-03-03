@@ -144,7 +144,7 @@ function controller:addToQueue(
 end
 
 --[[
-    Adds a song to the default queue.
+    Adds a song to the current queue.
 
     @param {string} id [The ID for accessing the audio through Echo.]
     @param {types.properties} properties [The audio properties.]
@@ -152,7 +152,7 @@ end
     @returns number
 ]]
 function controller:add(...): number
-    return self:addToQueue("default", ...)
+    return self:addToQueue(self._currentQueue, ...)
 end
 
 --[[
@@ -183,13 +183,13 @@ function controller:removeFromQueue(queue: string, id: number | string)
 end
 
 --[[
-    Removes a song to the default queue.
+    Removes a song to the current queue.
 
     @param {number | string} id [The index or ID of the audio.]
     @returns never
 ]]
 function controller:remove(...)
-    return self:removeFromQueue("default", ...)
+    return self:removeFromQueue(self._currentQueue, ...)
 end
 
 --[[
