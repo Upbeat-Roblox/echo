@@ -218,6 +218,15 @@ function controller:reset()
 end
 
 --[[
+    Returns if the current queue is playing.
+
+    @returns boolean
+]]
+function controller:isPlaying(): boolean
+    return self._queues[self._currentQueue].playing
+end
+
+--[[
     Plays the current queue.
 
     @returns never
