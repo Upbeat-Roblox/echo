@@ -24,7 +24,13 @@ export type controller = {
     createQueue: (queue: string) -> never,
     destroyQueue: (queue: string) -> never,
     setQueue: (self: controller, queue: string) -> never,
-    addToQueue: (self: controller, queue: string, id: string, properties: types.properties, metadata: types.metadata?) -> number,
+    addToQueue: (
+        self: controller,
+        queue: string,
+        id: string,
+        properties: types.properties,
+        metadata: types.metadata?
+    ) -> number,
     add: (self: controller, id: string, properties: types.properties, metadata: types.metadata?) -> number,
     removeFromQueue: (self: controller, queue: string, id: number | string) -> never,
     remove: (self: controller, id: number | string) -> never,
@@ -233,6 +239,15 @@ end
 ]]
 function controller:isPlaying(): boolean
     return self._queues[self._currentQueue].playing
+end
+
+--[[
+    Returns the audio queue.
+
+    @returns { types.queueAudio }
+]]
+function controller:getQueue(): { types.queueAudio }
+    return self._queues[self._currentQueue].audios
 end
 
 --[[
