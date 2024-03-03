@@ -1,7 +1,7 @@
 local RunService = game:GetService("RunService")
 local SoundService = game:GetService("SoundService")
 
-local PROPERTY_BLACKLIST: { string } = { "audioID", "handleCleanup", "Parent", "Volume", "Name" }
+local BLACKLISTED_PROPERTIES: { string } = { "audioID", "handleCleanup", "Parent", "Volume", "Name" }
 
 local generateAudioID = require(script.Parent.Parent.functions.generateAudioID)
 local types = require(script.Parent.Parent.types)
@@ -126,7 +126,7 @@ function controller:_play(properties: types.properties, id: string?, group: stri
 
     for property: string, value: types.property in pairs(properties) do
         -- Some properties should not be set via this loop, so we skip those.
-        if table.find(PROPERTY_BLACKLIST, property) or audioInstance[property] == nil then
+        if table.find(BLACKLISTED_PROPERTIES, property) or audioInstance[property] == nil then
             continue
         end
 
