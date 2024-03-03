@@ -1,6 +1,10 @@
 {
-  "name": "echo",
-  "tree": {
-    "$path": "src"
-  }
+    "name": "echo",
+    "tree": {
+        "$path": "src",
+
+        "Packages": {
+            "$path": "Packages"
+        }
+    }
 }
