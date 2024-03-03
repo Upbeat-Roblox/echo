@@ -1,5 +1,4 @@
 local baseQueue = require(script.Parent.Parent.base.queue)
-local types = require(script.Parent.Parent.Parent.types)
 local queueAddEvent: RemoteEvent = script.Parent.Parent.Parent.events.queueAdd
 local queueRemoveEvent: RemoteEvent = script.Parent.Parent.Parent.events.queueRemove
 
