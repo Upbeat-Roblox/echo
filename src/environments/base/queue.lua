@@ -28,6 +28,8 @@ export type controller = {
     add: (self: controller, id: string, properties: types.properties, metadata: types.metadata?) -> number,
     removeFromQueue: (self: controller, queue: string, id: number | string) -> never,
     remove: (self: controller, id: number | string) -> never,
+    play: (self: controller) -> never,
+    stop: (self: controller) -> never,
     next: (self: controller) -> never,
     back: (self: controller) -> never,
     restart: (self: controller) -> never,
