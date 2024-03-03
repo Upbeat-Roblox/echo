@@ -209,7 +209,7 @@ function controller:removeFromQueue(queue: string, id: number | string)
         self:next()
     end
 
-    self.audioRemoved:Fire(self._queues[queue].audios[index], queue)
+    self.audioRemoved:Fire(index, self._queues[queue].audios[index], queue)
     table.remove(self._queues[queue].audios, index)
 end
 
