@@ -211,7 +211,7 @@ function controller:remove(...)
 end
 
 --[[
-    Resets and stops a queue.
+    Resets a queue.
 
     @param {string} queue [The ID of the queue.]
     @returns never
