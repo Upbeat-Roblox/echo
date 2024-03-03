@@ -163,6 +163,11 @@ end
     @returns never
 ]]
 function controller:removeFromQueue(queue: string, id: number | string)
+    if self._queues[queue] == nil then
+        warn("queueDoesNotExist", queue)
+        return
+    end
+
     local index: number? = if typeof(id) == "string" then self:_findIndexByID(id) else id
 
     if typeof(index) ~= "number" then
