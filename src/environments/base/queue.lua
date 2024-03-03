@@ -84,8 +84,7 @@ function controller:destroyQueue(queue: string)
         self:setQueue("default")
     end
 
-    self._currentQueue = queue
-    self:restart()
+    self._queues[queue] = nil
 end
 
 --[[
