@@ -41,6 +41,15 @@ export type controller = {
 }
 
 --[[
+    Returns the current queue.
+
+    @returns string
+]]
+function controller:currentQueue(): string
+    return self._currentQueue
+end
+
+--[[
     Creates a new queue.
 
     @param {string} queue [The ID of the queue.]
