@@ -5,6 +5,7 @@ local PROPERTY_BLACKLIST: { string } = { "audioID", "handleCleanup", "Parent", "
 
 local generateAudioID = require(script.Parent.Parent.functions.generateAudioID)
 local types = require(script.Parent.Parent.types)
+local warn = require(script.Parent.Parent.functions.warn)
 local stopEvent: RemoteEvent = script.Parent.Parent.events.stop
 
 --[[
@@ -23,7 +24,12 @@ export type controller = {
     getVolume: (self: controller, group: string?) -> number,
     _start: (self: controller) -> never,
     _play: (self: controller, properties: types.properties, id: string?, group: string?) -> Sound,
-    _getProperty: (self: controller, properties: types.properties, property: string, default: types.property) -> types.property,
+    _getProperty: (
+        self: controller,
+        properties: types.properties,
+        property: string,
+        default: types.property
+    ) -> types.property,
 }
 
 --[[
@@ -143,10 +149,7 @@ function controller:_play(properties: types.properties, id: string?, group: stri
         end)
 
         if destroyOnEnded and audioInstance.Looped then
-            -- Warn the developer of the error to make it more clear on the issue.
-            warn(
-                "[Echo] destroyOnEnded property was set true but the audio was also looped. If you wish for Echo to handle cleanup of the audio then set looped to false."
-            )
+            warn("destroyOnEndedLooped")
         end
     end
 
