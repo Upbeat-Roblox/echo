@@ -1,7 +1,7 @@
 local RunService = game:GetService("RunService")
 local SoundService = game:GetService("SoundService")
 
-local BLACKLISTED_PROPERTIES: { string } = { "audioID", "handleCleanup", "Parent", "Volume", "Name" }
+local BLACKLISTED_PROPERTIES: { string } = { "audioID", "destroyOnEnded", "Parent", "Volume", "Name" }
 
 local generateAudioID = require(script.Parent.Parent.functions.generateAudioID)
 local types = require(script.Parent.Parent.types)
