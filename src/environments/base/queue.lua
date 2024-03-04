@@ -319,7 +319,11 @@ end
     @returns never
 ]]
 function controller:next()
-    if self._currentIndexInQueue >= #self._queues[self._currentQueue] then
+    if #self._queues[self._currentQueue].audios <= 0 then
+        return
+    end
+
+    if self._currentIndexInQueue >= #self._queues[self._currentQueue].audios then
         self._currentIndexInQueue = 0
     end
 
@@ -332,8 +336,12 @@ end
     @returns never
 ]]
 function controller:back()
+    if #self._queues[self._currentQueue].audios <= 0 then
+        return
+    end
+
     if self._currentIndexInQueue <= 0 then
-        self._currentIndexInQueue = #self._queues[self._currentQueue]
+        self._currentIndexInQueue = #self._queues[self._currentQueue].audios
     end
 
     self:_playIndex(self._currentIndexInQueue - 1)
@@ -371,8 +379,8 @@ function controller:skipTo(id: number | string)
         return
     end
 
-    if index > #self._queues[self._currentQueue] then
-        self._currentIndexInQueue = #self._queues[self._currentQueue]
+    if index > #self._queues[self._currentQueue].audios then
+        self._currentIndexInQueue = #self._queues[self._currentQueue].audios
     end
 
     if index < 0 then
@@ -429,7 +437,7 @@ end
 function controller:_findIndexByID(id: string): number?
     local audioIndex: number
 
-    for index: number, audio: types.queueAudio in ipairs(self._queues[self._currentQueue]) do
+    for index: number, audio: types.queueAudio in ipairs(self._queues[self._currentQueue].audios) do
         if audio.id ~= id then
             continue
         end
