@@ -408,6 +408,8 @@ end
 function controller:_start(controller)
     controller:setVolume(1, "queue")
     self._controller = controller
+
+    self:createQueue("default")
     self:setQueue("default")
     self:createQueue("replicatedQueue")
 end
