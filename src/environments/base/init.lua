@@ -122,6 +122,10 @@ function controller:_play(properties: types.properties, id: string?, group: stri
         id = generateAudioID(properties.audioID)
     end
 
+    if typeof(group) ~= "string" then
+        group = "default"
+    end
+
     local audioInstance: Sound = Instance.new("Sound")
     audioInstance.Name = self:_getProperty(properties, "Name", id)
     audioInstance.SoundId = properties.audioID
