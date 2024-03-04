@@ -247,6 +247,10 @@ function controller:resetQueue(queue: string)
         return
     end
 
+    if self._currentQueue == queue then
+        environmentController:stop("queue")
+    end
+
     self._queues[queue].audios = {}
     self.queueReset:Fire(queue)
 end
