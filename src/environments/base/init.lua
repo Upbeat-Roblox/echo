@@ -158,6 +158,8 @@ function controller:_play(properties: types.properties, id: string?, group: stri
         end
     end
 
+    audioInstance:Play()
+
     self._audios[id] = {
         instance = audioInstance,
         group = group,
