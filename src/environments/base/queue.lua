@@ -406,8 +406,8 @@ end
     @returns never
 ]]
 function controller:_start(controller)
+    controller:setVolume(1, "queue")
     self._controller = controller
-    self:setVolume(1, "queue")
     self:setQueue("default")
 end
 
