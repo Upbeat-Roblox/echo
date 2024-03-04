@@ -77,11 +77,6 @@ end
     @returns never
 ]]
 function controller:createQueue(queue: string)
-    if table.find(BLACKLISTED_QUEUE_IDS, queue) then
-        warn("blacklistedQueueID", queue, "createQueue")
-        return
-    end
-
     if self._queues[queue] then
         warn("queueCreateIDError", queue)
         return
