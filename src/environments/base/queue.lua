@@ -18,6 +18,7 @@ local controller = {}
 controller.audioAdded = Signal.new()
 controller.audioRemoved = Signal.new()
 controller.audioPlaying = Signal.new()
+controller.queueReset = Signal.new()
 controller._currentIndexInQueue = 0
 controller._currentQueue = nil
 controller._queues = {}
@@ -28,6 +29,7 @@ export type controller = {
     audioAdded: Signal,
     audioRemoved: Signal,
     audioPlaying: Signal,
+    queueReset: Signal,
     _currentIndexInQueue: number,
     _currentQueue: string,
     _queues: { [string]: types.queue },
@@ -245,6 +247,7 @@ function controller:resetQueue(queue: string)
     end
 
     self._queues[queue].audios = {}
+    self.queueReset:Fire(queue)
 end
 
 --[[
