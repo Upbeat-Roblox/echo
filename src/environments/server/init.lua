@@ -1,6 +1,6 @@
 local baseEnvironment = require(script.Parent.base)
-local queue = require(script.queue)
 local generateAudioID = require(script.Parent.Parent.functions.generateAudioID)
+local queue = require(script.queue)
 local types = require(script.Parent.Parent.types)
 local warn = require(script.Parent.Parent.functions.warn)
 local playEvent: RemoteEvent = script.Parent.Parent.events.play
