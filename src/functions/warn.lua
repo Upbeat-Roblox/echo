@@ -7,8 +7,8 @@ local errors = require(script.Parent.Parent.errors)
     @param {any} ... [The format strings.]
     @returns never
 --]]
-local function warn(errorID: string, ...)
-	warn(`[Echo] {string.format(errors[errorID], ...)}`)
+local function customWarn(errorID: string, ...)
+    warn(`[Echo] {string.format(errors[errorID], ...)}`)
 end
 
-return warn
+return customWarn
