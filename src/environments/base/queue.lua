@@ -365,7 +365,7 @@ end
     @returns types.metadata
 ]]
 function controller:getCurrentAudioMetadata(): types.metadata
-    return self._queues[self._currentQueue].audios[self._currentIndexInQueue]
+    return self._queues[self._currentQueue].audios[self._currentIndexInQueue].metadata
 end
 
 --[[
