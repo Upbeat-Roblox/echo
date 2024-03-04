@@ -11,11 +11,9 @@ local playEvent: RemoteEvent = script.Parent.Parent.events.play
     @public
 ]]
 local controller = baseEnvironment
-controller.queue = queue
 controller._started = false
 
 export type controller = baseEnvironment.controller & {
-    queue: queue.controller,
     _started: boolean,
     start: (self: controller) -> never,
     play: (self: controller, properties: types.properties, id: string?, group: string?) -> string,
@@ -35,7 +33,7 @@ function controller:start()
 
     self._started = true
     self:_start()
-    self.queue:_start()
+    queue:_start()
 
     playEvent.OnServerEvent:Connect(function(player: Player)
         for id: string, audio: types.audio in pairs(self._audios) do

@@ -1,3 +1,4 @@
+local baseEnvironment = require(script.Parent.Parent.base)
 local baseQueue = require(script.Parent.Parent.base.queue)
 local types = require(script.Parent.Parent.Parent.types)
 local queueAddEvent: RemoteEvent = script.Parent.Parent.Parent.events.queueAdd
@@ -9,10 +10,10 @@ local queueResetEvent: RemoteEvent = script.Parent.Parent.Parent.events.queueRes
 
     @public
 ]]
-local controller = baseQueue
+local controller = {}
 
-export type controller = baseQueue.controller & {
-    _start: () -> never,
+export type controller = {
+    _start: (self: controller) -> never,
 }
 
 --[[
@@ -22,16 +23,16 @@ export type controller = baseQueue.controller & {
     @returns never
 ]]
 function controller:_start()
-    baseQueue._start(self)
-    self:createQueue("replicatedQueue")
+    baseQueue:_start(baseEnvironment)
+    baseQueue:createQueue("replicatedQueue")
 
     queueAddEvent.OnClientEvent:Connect(function(player: Player)
-        for _index: string, audio: types.queueAudio in pairs(self:getQueue("replicatedQueue")) do
+        for _index: number, audio: types.queueAudio in ipairs(baseQueue:getQueue("replicatedQueue")) do
             queueAddEvent:FireClient(player, audio.id, audio.properties, audio.metadata)
         end
     end)
 
-    self.audioAdded:Connect(function(audio: types.queueAudio, queue: string)
+    baseQueue.audioAdded:Connect(function(audio: types.queueAudio, queue: string)
         if queue ~= "replicatedQueue" then
             return
         end
@@ -39,15 +40,15 @@ function controller:_start()
         queueAddEvent:FireAllClients(audio.id, audio.properties, audio.metadata)
     end)
 
-    self.audioRemoved:Connect(function(index: number, _audio: types.queueAudio, queue: string)
+    baseQueue.audioRemoved:Connect(function(index: number, _audio: types.queueAudio, queue: string)
         if queue ~= "replicatedQueue" then
             return
         end
 
         queueRemoveEvent:FireAllClients(index)
     end)
-    
-    self.queueReset:Connect(function(queue: string)
+
+    baseQueue.queueReset:Connect(function(queue: string)
         if queue ~= "replicatedQueue" then
             return
         end

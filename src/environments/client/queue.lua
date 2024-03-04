@@ -1,3 +1,4 @@
+local baseEnvironment = require(script.Parent.Parent.base)
 local baseQueue = require(script.Parent.Parent.base.queue)
 local queueAddEvent: RemoteEvent = script.Parent.Parent.Parent.events.queueAdd
 local queueRemoveEvent: RemoteEvent = script.Parent.Parent.Parent.events.queueRemove
@@ -8,10 +9,10 @@ local queueResetEvent: RemoteEvent = script.Parent.Parent.Parent.events.queueRes
 
     @public
 ]]
-local controller = baseQueue
+local controller = {}
 
-export type controller = baseQueue.controller & {
-    _start: () -> never,
+export type controller = {
+    _start: (self: controller) -> never,
 }
 
 --[[
@@ -21,22 +22,22 @@ export type controller = baseQueue.controller & {
     @returns never
 ]]
 function controller:_start()
-    baseQueue._start(self)
-    self:createQueue("replicatedQueue")
+    baseQueue:_start(baseEnvironment)
+    baseQueue:createQueue("replicatedQueue")
 
     -- Request the current queue.
     queueAddEvent:FireServer()
 
     queueAddEvent.OnClientEvent:Connect(function(...)
-        self:addToQueue("replicatedQueue", ...)
+        baseQueue:addToQueue("replicatedQueue", ...)
     end)
 
     queueRemoveEvent.OnClientEvent:Connect(function(...)
-        self:removeFromQueue("replicatedQueue", ...)
+        baseQueue:removeFromQueue("replicatedQueue", ...)
     end)
 
     queueResetEvent.OnClientEvent:Connect(function()
-        self:resetQueue("replicatedQueue")
+        baseQueue:resetQueue("replicatedQueue")
     end)
 end
 

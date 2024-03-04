@@ -11,11 +11,9 @@ local stopEvent: RemoteEvent = script.Parent.Parent.events.stop
     @public
 ]]
 local controller = baseEnvironment
-controller.queue = queue
 controller._started = false
 
 export type controller = baseEnvironment.controller & {
-    queue: queue.controller,
     _started: boolean,
     start: (self: controller) -> never,
     play: (self: controller, properties: types.properties, id: string?, group: string?) -> Sound,
@@ -34,7 +32,7 @@ function controller:start()
 
     self._started = true
     self:_start()
-    self.queue:_start()
+    queue:_start()
 
     -- Request the persistent audios that are already being played.
     playEvent:FireServer()

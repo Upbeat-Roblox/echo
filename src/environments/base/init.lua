@@ -4,6 +4,7 @@ local SoundService = game:GetService("SoundService")
 local BLACKLISTED_PROPERTIES: { string } = { "audioID", "destroyOnEnded", "Parent", "Volume", "Name" }
 
 local generateAudioID = require(script.Parent.Parent.functions.generateAudioID)
+local queue = require(script.queue)
 local types = require(script.Parent.Parent.types)
 local warn = require(script.Parent.Parent.functions.warn)
 local stopEvent: RemoteEvent = script.Parent.Parent.events.stop
@@ -14,10 +15,12 @@ local stopEvent: RemoteEvent = script.Parent.Parent.events.stop
     @private
 ]]
 local controller = {}
+controller.queue = queue
 controller._groups = {}
 controller._audios = {}
 
 export type controller = {
+    queue: queue.controller,
     _groups: { [string]: number },
     _audios: { [string]: types.audio },
     stop: (self: controller, id: string) -> never,
@@ -45,7 +48,7 @@ function controller:stop(id: string)
     if audio == nil then
         -- If the audio was not persistent then it was only replicated so tell the clients.
         -- NOTE: There is no way of knowing if the audio is still playing so this could fire even if the audio has already stopped.
-        if string.match(id, "replicatedNotPersistent-") then
+        if RunService:IsServer() and string.match(id, "replicatedNotPersistent-") then
             stopEvent:FireAllClients(id)
         end
 

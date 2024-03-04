@@ -1,5 +1,3 @@
-local RunService = game:GetService("RunService")
-
 local Signal = require(script.Parent.Parent.Parent.Packages.Signal)
 
 local BLACKLISTED_QUEUE_IDS: { string } = { "default", "replicatedQueue" }
@@ -17,6 +15,7 @@ controller.audioAdded = Signal.new()
 controller.audioRemoved = Signal.new()
 controller.audioPlaying = Signal.new()
 controller.queueReset = Signal.new()
+controller.queueStop = Signal.new()
 controller._currentIndexInQueue = 0
 controller._currentQueue = nil
 controller._queues = {}
@@ -28,6 +27,7 @@ export type controller = {
     audioRemoved: Signal,
     audioPlaying: Signal,
     queueReset: Signal,
+    queueStop: Signal,
     _currentIndexInQueue: number,
     _currentQueue: string,
     _queues: { [string]: types.queue },
@@ -56,7 +56,7 @@ export type controller = {
     restart: (self: controller) -> never,
     getCurrentAudioMetadata: (self: controller) -> types.metadata,
     skipTo: (self: controller, id: number | string) -> never,
-    _start: (self: controller) -> never,
+    _start: (self: controller, controller: any) -> never,
     _playIndex: (self: controller, index: number) -> never,
     _findIndexByID: (self: controller, id: string) -> number?,
 }
@@ -318,6 +318,7 @@ function controller:pause()
 
     self._queues[self._currentQueue].playing = false
     self._controller:stop("queue")
+    self.queuePause:Fire()
 end
 
 --[[
@@ -401,13 +402,13 @@ end
     Starts the environment.
 
     @private
+    @param {any} controller [The Echo controller.]
     @returns never
 ]]
-function controller:_start()
+function controller:_start(controller)
+    self._controller = controller
+    self:setVolume(1, "queue")
     self:setQueue("default")
-    
-    self._controller = require(if RunService:IsClient() then script.Parent.Parent.client else script.Parent.Parent.server)
-    self._controller:setVolume("queue", 1)
 end
 
 --[[
@@ -426,6 +427,8 @@ function controller:_playIndex(index: number)
         return
     end
 
+    self._controller:stop("queue")
+
     local audio: types.queueAudio = queue.audios[index]
 
     if audio == nil then
@@ -433,7 +436,11 @@ function controller:_playIndex(index: number)
     end
 
     self.audioPlaying:Fire(audio, self._currentQueue)
-    self._controller:play(audio.properties, audio.id, "queue")
+
+    local audioInstance: Sound = self._controller:_play(audio.properties, audio.id, "queue")
+    audioInstance.Ended:Once(function()
+        self:next()
+    end)
 end
 
 --[[
