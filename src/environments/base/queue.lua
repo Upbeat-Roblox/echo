@@ -4,8 +4,6 @@ local Signal = require(script.Parent.Parent.Parent.Packages.Signal)
 
 local BLACKLISTED_QUEUE_IDS: { string } = { "default", "replicatedQueue" }
 
-local environmentController =
-    require(if RunService:IsClient() then script.Parent.Parent.client else script.Parent.Parent.server)
 local types = require(script.Parent.Parent.Parent.types)
 local warn = require(script.Parent.Parent.Parent.functions.warn)
 
@@ -33,6 +31,7 @@ export type controller = {
     _currentIndexInQueue: number,
     _currentQueue: string,
     _queues: { [string]: types.queue },
+    _controller: any,
     currentQueue: (self: controller) -> string,
     createQueue: (self: controller, queue: string) -> never,
     destroyQueue: (self: controller, queue: string) -> never,
@@ -248,7 +247,7 @@ function controller:resetQueue(queue: string)
     end
 
     if self._currentQueue == queue then
-        environmentController:stop("queue")
+        self._controller:stop("queue")
     end
 
     self._queues[queue].audios = {}
@@ -318,7 +317,7 @@ function controller:pause()
     end
 
     self._queues[self._currentQueue].playing = false
-    environmentController:stop("queue")
+    self._controller:stop("queue")
 end
 
 --[[
@@ -406,7 +405,9 @@ end
 ]]
 function controller:_start()
     self:setQueue("default")
-    environmentController:setVolume("queue", 1)
+    
+    self._controller = require(if RunService:IsClient() then script.Parent.Parent.client else script.Parent.Parent.server)
+    self._controller:setVolume("queue", 1)
 end
 
 --[[
@@ -432,7 +433,7 @@ function controller:_playIndex(index: number)
     end
 
     self.audioPlaying:Fire(audio, self._currentQueue)
-    environmentController:play(audio.properties, audio.id, "queue")
+    self._controller:play(audio.properties, audio.id, "queue")
 end
 
 --[[
