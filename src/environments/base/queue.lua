@@ -47,6 +47,7 @@ export type controller = {
     add: (self: controller, id: string, properties: types.properties, metadata: types.metadata?) -> number,
     removeFromQueue: (self: controller, queue: string, id: number | string) -> never,
     remove: (self: controller, id: number | string) -> never,
+    resetQueue: (self: controller, queue: string) -> never,
     isPlaying: (self: controller) -> boolean,
     getQueue: (self: controller, queue: string?) -> { types.queueAudio },
     play: (self: controller) -> never,
