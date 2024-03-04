@@ -16,6 +16,10 @@
         {
             "Name": "queueRemove",
             "ClassName": "RemoteEvent"
+        },
+        {
+            "Name": "queueReset",
+            "ClassName": "RemoteEvent"
         }
     ]
 }

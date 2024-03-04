@@ -1,6 +1,7 @@
 local baseQueue = require(script.Parent.Parent.base.queue)
 local queueAddEvent: RemoteEvent = script.Parent.Parent.Parent.events.queueAdd
 local queueRemoveEvent: RemoteEvent = script.Parent.Parent.Parent.events.queueRemove
+local queueResetEvent: RemoteEvent = script.Parent.Parent.Parent.events.queueReset
 
 --[[
     Controls the client queue.
@@ -32,6 +33,10 @@ function controller:_start()
 
     queueRemoveEvent.OnClientEvent:Connect(function(...)
         self:removeFromQueue("replicatedQueue", ...)
+    end)
+
+    queueResetEvent.OnClientEvent:Connect(function()
+        self:resetQueue("replicatedQueue")
     end)
 end
 
