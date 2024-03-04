@@ -24,7 +24,6 @@ export type controller = {
 ]]
 function controller:_start()
     baseQueue:_start(baseEnvironment)
-    baseQueue:createQueue("replicatedQueue")
 
     queueAddEvent.OnClientEvent:Connect(function(player: Player)
         for _index: number, audio: types.queueAudio in ipairs(baseQueue:getQueue("replicatedQueue")) do

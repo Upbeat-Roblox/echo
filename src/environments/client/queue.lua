@@ -23,7 +23,6 @@ export type controller = {
 ]]
 function controller:_start()
     baseQueue:_start(baseEnvironment)
-    baseQueue:createQueue("replicatedQueue")
 
     -- Request the current queue.
     queueAddEvent:FireServer()
