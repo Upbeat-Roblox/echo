@@ -242,7 +242,7 @@ function controller:resetQueue(queue: string)
     end
 
     if self._currentQueue == queue then
-        self._controller:stop("queue")
+        self._controller:stop("replicatedQueue")
     end
 
     self._queues[queue].audios = {}
@@ -312,7 +312,7 @@ function controller:pause()
     end
 
     self._queues[self._currentQueue].playing = false
-    self._controller:stop("queue")
+    self._controller:stop("replicatedQueue")
     self.queuePause:Fire()
 end
 
@@ -425,7 +425,7 @@ function controller:_playIndex(index: number)
         return
     end
 
-    self._controller:stop("queue")
+    self._controller:stop("replicatedQueue")
 
     local audio: types.queueAudio = queue.audios[index]
 
@@ -435,7 +435,7 @@ function controller:_playIndex(index: number)
 
     self.audioPlaying:Fire(audio, self._currentQueue)
 
-    local audioInstance: Sound = self._controller:_play(audio.properties, audio.id, "queue")
+    local audioInstance: Sound = self._controller:_play(audio.properties, "replicatedQueue", "queue")
     audioInstance.Ended:Once(function()
         self:next()
     end)
