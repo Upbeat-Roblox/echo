@@ -17,7 +17,7 @@ controller.audioPlaying = Signal.new()
 controller.queueReset = Signal.new()
 controller.queueStop = Signal.new()
 controller._currentIndexInQueue = 0
-controller._currentQueue = nil
+controller._currentQueue = "default"
 controller._queues = {}
 
 type Signal = typeof(Signal.new())
