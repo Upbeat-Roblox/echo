@@ -25,7 +25,7 @@ export type controller = {
 function controller:_start()
     baseQueue:_start(baseEnvironment)
 
-    queueAddEvent.OnClientEvent:Connect(function(player: Player)
+    queueAddEvent.OnServerEvent:Connect(function(player: Player)
         for _index: number, audio: types.queueAudio in ipairs(baseQueue:getQueue("replicatedQueue")) do
             queueAddEvent:FireClient(player, audio.id, audio.properties, audio.metadata)
         end
